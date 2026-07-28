@@ -1,0 +1,39 @@
+# Byte-compiled / cache / IDE
+__pycache__/
+*.py[cod]
+*$py.class
+.idea/
+.venv/
+.DS_Store
+
+# Exclude Markdown report files
+*.md
+
+# Exclude PNG image artifacts
+*.png
+
+# Exclude CSV datasets
+*.csv
+datasets/
+
+# Exclude Frontend application files
+templates/
+static/
+app.py
+
+# Exclude test and inspection scripts
+test_*.py
+windkessel_validation.py
+windkessel_fit.py
+inspect_cell.py
+inspect_mat.py
+
+# Exclude duplicate root clutter files
+extract_cardio.py
+extract_mimic.py
+train_cardio.py
+train_windkessel_xgboost.py
+cardio_model_nolabs.pkl
+cardio_scaler_nolabs.pkl
+realistic_model.pkl
+realistic_scaler.pkl

@@ -11,7 +11,7 @@ np.random.seed(42)
 
 data = []
 
-print(f"🚀 {NUM_SAMPLES} örnekli sentetik dataset üretiliyor...")
+print(f" {NUM_SAMPLES} örnekli sentetik dataset üretiliyor...")
 
 for i in range(NUM_SAMPLES):
     # 1. Biyomekanik Parametreler (Genişletilmiş Aralıklar)

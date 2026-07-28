@@ -5,22 +5,21 @@ import joblib
 import os
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, classification_report
 
-DATA_PATH = 'datasets/cardio_train.csv'
+# --- AYARLAR ---
+DATA_PATH = '../datasets/cardio_train_feature.csv'
 
 
 def train_no_labs():
-    print("Training Cardio Risk model...")
+    print("🚀 Model Eğitiliyor (Kolesterol, Glikoz ve Active YOK)...")
 
     if not os.path.exists(DATA_PATH):
-        print(f"Dataset file '{DATA_PATH}' not found.")
+        print("❌ Veri bulunamadı.")
         return
 
     df = pd.read_csv(DATA_PATH, sep=';')
-    df['age_years'] = (df['age'] / 365.25).astype(int)
-    df['BMI'] = df['weight'] / ((df['height'] / 100) ** 2)
-    df['PP'] = df['ap_hi'] - df['ap_lo']
+
 
     features = [
         'age_years', 'gender', 'height', 'weight',
@@ -34,12 +33,16 @@ def train_no_labs():
     X = df[features]
     y = df[target]
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+    print(f"📊 Model Girdileri: {features}")
+
+    # Eğitim
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
 
+    print("🧠 XGBoost Modeli Eğitiliyor...")
     model = xgb.XGBClassifier(
         n_estimators=200,
         learning_rate=0.05,
@@ -54,15 +57,14 @@ def train_no_labs():
 
     y_pred = model.predict(X_test_scaled)
     acc = accuracy_score(y_test, y_pred)
-    print(f"Cardio Risk model accuracy: {acc:.4f}")
+    print(f"🏆 Model Doğruluğu (Lab Verisi Olmadan): {acc:.4f}")
+    # Not: Doğruluk %73 civarından %71-72 civarına düşebilir, bu çok normaldir
+    # ve projenin çalışabilirliği için kabul edilebilir bir takastır.
 
-    os.makedirs('ml_model_cardio', exist_ok=True)
-    joblib.dump(model, 'ml_model_cardio/cardio_model_nolabs.pkl')
-    joblib.dump(scaler, 'ml_model_cardio/cardio_scaler_nolabs.pkl')
-
-    joblib.dump(model, 'cardio_model_nolabs.pkl')
+    # Kaydet
+    joblib.dump(model,'cardio_model_nolabs.pkl')
     joblib.dump(scaler, 'cardio_scaler_nolabs.pkl')
-    print("Model saved successfully.")
+    print("✅ Non-Invaziv Model Kaydedildi.")
 
 
 if __name__ == "__main__":

@@ -29,7 +29,7 @@ def wk3_derivative(p, t, r_total, c_total, z_c, hr, sv, systole_duration):
 
 
 data = []
-print(f"🚀 {NUM_SAMPLES} adet 'Realistic Noise' veri üretiliyor...")
+print(f" {NUM_SAMPLES} adet 'Realistic Noise' veri üretiliyor...")
 
 with tqdm(total=NUM_SAMPLES) as pbar:
     while len(data) < NUM_SAMPLES:
