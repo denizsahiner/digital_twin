@@ -31,7 +31,7 @@ np.random.seed(42)
 
 data = []
 
-print(f"🚀 {NUM_SAMPLES} adet 'TERTEMİZ' (No Noise) veri üretiliyor...")
+print(f" {NUM_SAMPLES} adet 'TERTEMİZ' (No Noise) veri üretiliyor...")
 
 with tqdm(total=NUM_SAMPLES) as pbar:
     while len(data) < NUM_SAMPLES:

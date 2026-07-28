@@ -1,36 +1,28 @@
-# main.py
 from simulator import BioDigitalTwin
-from risk_predictor import RiskPredictor, calculate_history_risk # calculate_history_risk eklendi
-from visualizer import plot_simulation_dashboard
+from risk_predictor import RiskPredictor, calculate_history_risk
 
-# ... (Diğer kodların aynı kalıyor) ...
 
 def main():
-    # 1. Ayarlar ve Hasta Tanımı
-    MODEL_PATH = 'ml_model_cardio/cardio_model_nolabs.pkl' # HR destekli model önerilir
-    SCALER_PATH = 'ml_model_cardio/cardio_scaler_nolabs.pkl'
-    
+    model_path = 'ml_model_cardio/cardio_model_nolabs.pkl'
+    scaler_path = 'ml_model_cardio/cardio_scaler_nolabs.pkl'
+
     patient_static = {'age': 55, 'gender': 2, 'height': 175, 'weight': 85}
-    predictor = RiskPredictor(MODEL_PATH, SCALER_PATH)
-    
-    # Başlangıç değerleri
-    ahmet_bey = BioDigitalTwin(r=1.3, c=1.2, zc=0.07, hr=75, sv=70, active_conditions=['sigara'])
+    predictor = RiskPredictor(model_path, scaler_path)
 
-    # 2. Simülasyonu Çalıştır
-    ahmet_bey.run_simulation(30, "sigara_icmek", "Sigara İçiyor")
-    ahmet_bey.run_simulation(60, "sigarayi_birakmak", "Sigarayı Bıraktı")
-    ahmet_bey.run_simulation(90, "spor_yapmak", "Spora Başladı")
-    ahmet_bey.run_simulation(10, "grip_olmak", "Ağır Grip")
-    ahmet_bey.run_simulation(30, "spor_yapmak", "İyileşme + Spor")
+    subject = BioDigitalTwin(r=1.3, c=1.2, zc=0.07, hr=75, sv=70, active_conditions=['sigara'])
 
-    # 3. Tüm Geçmiş İçin Risk Skorlarını Hesapla
-    print("\n🧠 Yapay zeka tüm simülasyon geçmişini analiz ediyor...")
-    # simulator.history listesini DataFrame'e çevirip sağlık skorlarını ekliyoruz
-    df_processed = calculate_history_risk(predictor, ahmet_bey.history, patient_static)
+    subject.run_simulation(30, "sigara_icmek", "Smoking")
+    subject.run_simulation(60, "sigarayi_birakmak", "Smoking Cessation")
+    subject.run_simulation(90, "spor_yapmak", "Started Exercise")
+    subject.run_simulation(10, "grip_olmak", "Flu")
+    subject.run_simulation(30, "spor_yapmak", "Recovery + Exercise")
 
-    # 4. Dashboard'u Çiz
-    print("📊 Dashboard oluşturuluyor...")
-    plot_simulation_dashboard(df_processed)
+    print("\nAnalyzing simulation trajectory...")
+    df_processed = calculate_history_risk(predictor, subject.history, patient_static)
+
+    print("Simulation analysis complete.")
+    print(df_processed[['Day', 'Scenario', 'SBP', 'DBP', 'Risk_Prob', 'Heart_Health_Score']].head())
+
 
 if __name__ == "__main__":
     main()

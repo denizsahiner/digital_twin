@@ -11,7 +11,7 @@ SCALER_PATH = 'realistic_scaler.pkl'
 
 
 def predict_valid_patients():
-    print("🚀 MIMIC Hemodinamik Analizi Başlıyor...")
+    print(" MIMIC Hemodinamik Analizi Başlıyor...")
 
     # 1. Veri Setini Yükle
     if not os.path.exists(MIMIC_PATH):
@@ -20,7 +20,7 @@ def predict_valid_patients():
 
     df = pd.read_csv(MIMIC_PATH)
     total_count = len(df)
-    print(f"📂 Toplam Hasta Kaydı: {total_count}")
+    print(f" Toplam Hasta Kaydı: {total_count}")
 
     # 2. FİLTRELEME: Sadece Geçerli SV'ye Sahip Olanlar
     # Kriter:
@@ -39,7 +39,7 @@ def predict_valid_patients():
 
     filtered_count = len(df_clean)
     print(f"✅ Geçerli SV ve Vital Verisi Olan Hasta Sayısı: {filtered_count}")
-    print(f"🗑️  Elenen (Default SV veya Eksik Veri): {total_count - filtered_count}")
+    print(f"️  Elenen (Default SV veya Eksik Veri): {total_count - filtered_count}")
 
     if filtered_count == 0:
         print("⚠️ Hiç geçerli hasta kalmadı! İşlem durduruluyor.")
@@ -53,7 +53,7 @@ def predict_valid_patients():
         print("❌ Model dosyaları eksik! Önce 'train_realistic.py' çalıştır.")
         return
 
-    print("🧠 Dijital İkiz Parametreleri (R, C, Zc) Hesaplanıyor...")
+    print(" Dijital İkiz Parametreleri (R, C, Zc) Hesaplanıyor...")
 
     # =========================================================================
     # 4. FEATURE ENGINEERING (Modelin Beklediği Formata Çevirme)
@@ -134,7 +134,7 @@ def predict_valid_patients():
     print(f"✅ Analiz tamamlandı! Sonuçlar kaydedildi: {OUTPUT_PATH}")
 
     # İlk 5 hastayı göster
-    print("\n🔍 Örnek Sonuçlar:")
+    print("\n Örnek Sonuçlar:")
     print(df_clean[
               ['subject_id', 'HR', 'Systolic_BP', 'SV', 'Estimated_R', 'Estimated_C', 'Status_R', 'Status_C']].head())
 

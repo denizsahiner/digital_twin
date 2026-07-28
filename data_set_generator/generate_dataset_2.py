@@ -13,7 +13,7 @@ np.random.seed(42)
 data = []
 count = 0
 
-print(f"🚀 {NUM_SAMPLES_TARGET} geçerli örnek üretilene kadar simülasyon sürüyor...")
+print(f" {NUM_SAMPLES_TARGET} geçerli örnek üretilene kadar simülasyon sürüyor...")
 
 with tqdm(total=NUM_SAMPLES_TARGET) as pbar:
     while len(data) < NUM_SAMPLES_TARGET:
