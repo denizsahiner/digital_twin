@@ -4,6 +4,8 @@ from scipy.integrate import odeint
 from windkessel import generate_inflow, wk3_derivative
 
 # --- AYARLAR ---
+from pathlib import Path as _Path
+_OUT = _Path(__file__).resolve().parents[2] / 'data'
 NUM_SAMPLES = 50000  # İdeal eğitim boyutu
 DT = 0.005
 NUM_BEATS = 10       # Sistemin oturması için beat sayısını artırdık
@@ -73,6 +75,6 @@ columns = [
 ]
 
 df = pd.DataFrame(data, columns=columns)
-df.to_csv('../datasets/synthetic_windkessel_dataset_v3.csv', index=False)
+df.to_csv(_OUT / 'synthetic_windkessel_dataset_v3.csv', index=False)
 
 print(f"\n✅ Başarılı! {len(df)} satırlık dataset kaydedildi.")

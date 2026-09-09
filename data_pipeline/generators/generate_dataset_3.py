@@ -4,6 +4,8 @@ from scipy.integrate import odeint
 from tqdm import tqdm
 
 # --- AYARLAR ---
+from pathlib import Path as _Path
+_OUT = _Path(__file__).resolve().parents[2] / 'data'
 NUM_SAMPLES = 60000
 DT = 0.005
 NUM_BEATS = 10
@@ -90,5 +92,5 @@ columns = ['R_True', 'C_True', 'Zc_True',
            'HR', 'SV', 'Sys_Obs', 'Dia_Obs', 'MAP_Obs', 'PP_Obs', 'Sys_Duration']
 
 df = pd.DataFrame(data, columns=columns)
-df.to_csv('../datasets/realistic_windkessel_dataset.csv', index=False)
+df.to_csv(_OUT / 'realistic_windkessel_dataset.csv', index=False)
 print("✅ Gerçekçi Dataset Hazır!")

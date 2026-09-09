@@ -5,6 +5,8 @@ from windkessel import generate_inflow, wk3_derivative
 from tqdm import tqdm
 
 # --- AYARLAR ---
+from pathlib import Path as _Path
+_OUT = _Path(__file__).resolve().parents[2] / 'data'
 NUM_SAMPLES_TARGET = 50000
 DT = 0.005
 NUM_BEATS = 10
@@ -66,4 +68,4 @@ with tqdm(total=NUM_SAMPLES_TARGET) as pbar:
 # DataFrame Oluştur
 columns = ['R', 'C', 'Zc', 'HR', 'SV', 'Systolic_BP', 'Diastolic_BP', 'MAP', 'Pulse_Pressure', 'Systole_Duration']
 df = pd.DataFrame(data, columns=columns)
-df.to_csv('../datasets/filtered_windkessel_dataset.csv', index=False)
+df.to_csv(_OUT / 'filtered_windkessel_dataset.csv', index=False)

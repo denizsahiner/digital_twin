@@ -1,6 +1,14 @@
-import pandas as pd
+"""Feature-engineer the raw Kaggle 'Cardiovascular Disease' dataset.
 
-df = pd.read_csv('../datasets/cardio_train.csv', sep=';')
+Input : data/cardio_train.csv    (download - see data/README.md)
+Output: data/cardio_train_feature.csv
+"""
+import pandas as pd
+from pathlib import Path
+
+DATA_DIR = Path(__file__).resolve().parents[1] / 'data'
+
+df = pd.read_csv(DATA_DIR / 'cardio_train.csv', sep=';')
 df = df[(df['ap_hi'] >= 70) & (df['ap_hi'] <= 220)]
 df = df[(df['ap_lo'] >= 40) & (df['ap_lo'] <= 150)]
 df = df[(df['height'] >= 140) & (df['height'] <= 200)]
@@ -14,4 +22,5 @@ df['BMI'] = df['weight'] / ((df['height'] / 100) ** 2)
 df['PP'] = df['ap_hi'] - df['ap_lo']
 
 
-df.to_csv('../datasets/cardio_train_feature.csv', sep=';', index=False)
+df.to_csv(DATA_DIR / 'cardio_train_feature.csv', sep=';', index=False)
+print(f"✅ {DATA_DIR / 'cardio_train_feature.csv'}  ({len(df)} rows)")

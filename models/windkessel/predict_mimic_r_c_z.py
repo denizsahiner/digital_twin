@@ -2,12 +2,15 @@ import pandas as pd
 import numpy as np
 import joblib
 import os
+from pathlib import Path
 
-# --- AYARLAR ---
-MIMIC_PATH = "../datasets/mimic_all_filtered.csv"
-OUTPUT_PATH = "../datasets/mimic_hemodynamic_predictions_filtered.csv"
-MODEL_PATH = 'realistic_model.pkl'
-SCALER_PATH = 'realistic_scaler.pkl'
+# --- PATHS ---
+HERE = Path(__file__).resolve().parent
+REPO_ROOT = HERE.parents[1]
+MIMIC_PATH = REPO_ROOT / 'data' / 'mimic_all_filtered.csv'          # from data_pipeline/extract_mimic.py
+OUTPUT_PATH = REPO_ROOT / 'data' / 'mimic_hemodynamic_predictions_filtered.csv'
+MODEL_PATH = HERE / 'realistic_model.pkl'
+SCALER_PATH = HERE / 'realistic_scaler.pkl'
 
 
 def predict_valid_patients():

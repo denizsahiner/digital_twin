@@ -1,0 +1,23 @@
+# Core
+numpy>=2.0
+pandas>=2.2
+scipy>=1.13
+
+# ML
+scikit-learn>=1.5
+xgboost>=2.1
+joblib>=1.4
+
+# Explainability (analysis/03_shap_analysis.py)
+shap>=0.46
+
+# Web app
+flask>=3.0
+flask-cors>=5.0
+
+# Signal I/O (MIMIC .mat reading, PPG->ABP calibration)
+h5py>=3.11
+
+# Plotting / progress
+matplotlib>=3.9
+tqdm>=4.66

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardio Digital Twin | Kardiyovasküler Risk Simülatörü</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="glow-bg"></div>
+    
+    <header class="glass-header">
+        <div class="header-container">
+            <div class="logo">
+                <svg class="heart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="url(#heart-grad)"/>
+                    <defs>
+                        <linearGradient id="heart-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ff3b5c" />
+                            <stop offset="100%" stop-color="#a155ff" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>BIO-DIGITAL<span class="highlight">TWIN</span></span>
+            </div>
+            <div class="subtitle">Kardiyovasküler Hemodinamik Risk Modelleme Platformu</div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Tab Navigation -->
+        <div class="tab-navigation glass-card">
+            <button class="tab-nav-btn active" data-target="twin-tab">👤 İkiz Risk Simülatörü</button>
+            <button class="tab-nav-btn" data-target="calibration-tab">📈 PPG & Windkessel Kalibrasyon Analizi</button>
+        </div>
+
+        <!-- TAB 1: Digital Twin Simulator -->
+        <div id="twin-tab" class="tab-pane active">
+            <div class="dashboard-grid">
+            
+            <!-- Left Side: Profile and Vitals Form -->
+            <section class="card glass-card form-section">
+                <h2><span class="icon">👤</span> Hasta Profili ve Vital Değerler</h2>
+                <form id="vitals-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="age">Yaş</label>
+                            <input type="number" id="age" name="age" min="10" max="100" value="45" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Cinsiyet</label>
+                            <select id="gender" name="gender" required>
+                                <option value="1">Kadın</option>
+                                <option value="2" selected>Erkek</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="height">Boy (cm)</label>
+                            <input type="number" id="height" name="height" min="100" max="220" value="175" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">Kilo (kg)</label>
+                            <input type="number" id="weight" name="weight" min="30" max="250" value="80" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sbp">Sistolik Tansiyon (mmHg)</label>
+                            <input type="number" id="sbp" name="sbp" min="70" max="220" value="135" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dbp">Diyastolik Tansiyon (mmHg)</label>
+                            <input type="number" id="dbp" name="dbp" min="40" max="150" value="85" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hr">Nabız (Kalp Atış Hızı - bpm)</label>
+                            <input type="number" id="hr" name="hr" min="40" max="180" value="78" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sv">Atım Hacmi (Stroke Volume - mL)</label>
+                            <div class="input-with-info">
+                                <input type="number" id="sv" name="sv" min="30" max="180" value="70" required>
+                                <small class="field-desc">Ortalama 70 mL'dir. Ölçüm yoksa 70 bırakabilirsiniz.</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="gluc">Kan Şekeri (Açlık)</label>
+                            <select id="gluc" name="gluc" required>
+                                <option value="1" selected>Normal (<100 mg/dL)</option>
+                                <option value="2">Sınırda (100-125 mg/dL)</option>
+                                <option value="3">Yüksek (>125 mg/dL / Diyabetik)</option>
+                            </select>
+                        </div>
+                        <div class="form-group habits-group">
+                            <label>Yaşam Tarzı / Alışkanlıklar</label>
+                            <div class="checkbox-row">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="smoke" name="smoke">
+                                    <span class="checkmark"></span>
+                                    Sigara Kullanımı
+                                </label>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="alco" name="alco">
+                                    <span class="checkmark"></span>
+                                    Alkol Kullanımı
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-glow" id="predict-btn">
+                        <span class="pulse-ring"></span>
+                        İKİZİ OLUŞTUR VE ANALİZ ET
+                    </button>
+                </form>
+            </section>
+
+            <!-- Right Side: Twin Results Dashboard -->
+            <section class="card glass-card results-section" id="twin-results">
+                <div class="initial-message" id="initial-message">
+                    <div class="pulse-heart-animation">
+                        <svg viewBox="0 0 24 24" class="pulsing-heart">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </div>
+                    <p>Hastanın hemodinamik dijital ikizini modellemek ve ML tabanlı kardiyovasküler risk tahminini hesaplamak için soldaki formu doldurup İkizi Oluştur butonuna basın.</p>
+                </div>
+                
+                <div class="results-content hidden" id="results-content">
+                    <h2><span class="icon">🧬</span> Biyofiziksel Dijital İkiz Raporu</h2>
+                    
+                    <div class="risk-gauge-container">
+                        <div class="risk-ring-wrapper">
+                            <svg class="ring-svg" viewBox="0 0 120 120">
+                                <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
+                                <circle class="ring-progress" id="risk-ring" cx="60" cy="60" r="50"></circle>
+                            </svg>
+                            <div class="risk-value">
+                                <span class="percent" id="risk-pct">0%</span>
+                                <span class="label">Kardiyo Risk</span>
+                            </div>
+                        </div>
+                        <div class="risk-text-summary">
+                            <h3>Kalp Hastalığı Riski: <span id="risk-badge" class="badge">Düşük</span></h3>
+                            <p id="risk-description">Vücut parametreleri ve yaşam alışkanlıklarına göre 10 yıllık kardiyovasküler hastalık riski.</p>
+                        </div>
+                    </div>
+
+                    <div class="twin-params-grid">
+                        <div class="param-card">
+                            <div class="param-header">
+                                <span class="param-title">Sistemik Damar Direnci (R)</span>
+                                <span class="info-tooltip" data-tooltip="Kalbin kan pompalamaya karşı karşılaştığı toplam direnç. Yüksek olması tansiyona ve damar hasarına yol açar.">ℹ️</span>
+                            </div>
+                            <div class="param-value" id="val-r">0.00 <span class="unit">mmHg.s/mL</span></div>
+                            <div class="param-status text-gradient-red" id="status-r">Normal</div>
+                        </div>
+                        <div class="param-card">
+                            <div class="param-header">
+                                <span class="param-title">Büyük Damar Esnekliği (C)</span>
+                                <span class="info-tooltip" data-tooltip="Aort ve büyük damarların genişleme kabiliyeti (uyum). Düşük olması damar sertliği (stiffness) göstergesidir.">ℹ️</span>
+                            </div>
+                            <div class="param-value" id="val-c">0.00 <span class="unit">mL/mmHg</span></div>
+                            <div class="param-status text-gradient-teal" id="status-c">Normal</div>
+                        </div>
+                        <div class="param-card">
+                            <div class="param-header">
+                                <span class="param-title">Karakteristik Aort Empedansı (Zc)</span>
+                                <span class="info-tooltip" data-tooltip="Kalbin hemen çıkışındaki aort direncidir. Sol karıncık yükünü doğrudan etkiler.">ℹ️</span>
+                            </div>
+                            <div class="param-value" id="val-zc">0.00 <span class="unit">mmHg.s/mL</span></div>
+                            <div class="param-status" id="status-zc">Fizyolojik Taban</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- SECOND ROW: Simulation Panel (Initially hidden, revealed on twin creation) -->
+        <section class="card glass-card simulation-section hidden" id="simulation-panel">
+            <div class="sim-header">
+                <h2><span class="icon">⏳</span> Yaşam Tarzı Senaryoları ve Gelecek Simülatörü</h2>
+                <p class="sim-intro-text">Oluşturulan dijital ikiz üzerinde gelecek yıllardaki alışkanlık değişimlerini planlayın ve damar direnci, tansiyon ile kardiyovasküler riskin zamana bağlı nasıl değişeceğini simüle edin.</p>
+            </div>
+
+            <div class="simulation-layout">
+                <!-- Timeline/Phase Builder -->
+                <div class="sim-controls-panel">
+                    <h3>Senaryo Akışı Oluştur</h3>
+                    
+                    <div class="timeline-builder-card">
+                        <div class="form-group">
+                            <label for="sim-action">Eylem / Yaşam Değişikliği</label>
+                            <select id="sim-action">
+                                <option value="sigara_ic">Sigara İçmeye Başla / Devam Et</option>
+                                <option value="sigara_birak">Sigarayı Bırak</option>
+                                <option value="spor_yap">Spora Başla (Haftada 3+ Gün) / Devam Et</option>
+                                <option value="sporu_birak">Sporu Bırak / Hareketsiz Yaşam</option>
+                                <option value="alkol_ic">Düzenli Alkol Alımına Başla / Devam Et</option>
+                                <option value="alkol_birak">Alkolü Tamamen Bırak</option>
+                                <option value="grip_ol">Akut Grip/Enfeksiyon Geçir (Kısa Süreli)</option>
+                                <option value="stabil">Mevcut Durumu Koru (Stabil Yaşam)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sim-days">Süre (Gün)</label>
+                            <input type="number" id="sim-days" min="5" max="3650" value="180">
+                        </div>
+                        <div class="form-group">
+                            <label for="sim-desc">Senaryo Açıklaması (Örn: "Sigarayı Bırakma Dönemi")</label>
+                            <input type="text" id="sim-desc" placeholder="Senaryo ismi girin..." value="Sigarayı Bıraktım">
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-full" id="add-phase-btn">Eylemi Zaman Çizelgesine Ekle</button>
+                    </div>
+
+                    <div class="active-timeline">
+                        <h4>Planlanan Zaman Çizelgesi</h4>
+                        <div class="timeline-phases-list" id="phases-list">
+                            <!-- Dynamically added phases will appear here -->
+                        </div>
+                        <div class="sim-action-buttons">
+                            <button type="button" class="btn btn-primary btn-glow" id="run-sim-btn">
+                                SİMÜLASYONU BAŞLAT
+                            </button>
+                            <button type="button" class="btn btn-outline" id="clear-phases-btn">Zaman Çizelgesini Temizle</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulation Visualizations (Charts & Clinical Analysis) -->
+                <div class="sim-results-panel">
+                    <div class="chart-navigation">
+                        <button class="tab-btn active" data-chart="bp">Tansiyon (SBP/DBP)</button>
+                        <button class="tab-btn" data-chart="resistance">Damar Direnci (R)</button>
+                        <button class="tab-btn" data-chart="compliance">Damar Esnekliği (C)</button>
+                        <button class="tab-btn" data-chart="risk">Sağlık Riski (Cardio Risk)</button>
+                    </div>
+                    
+                    <div class="chart-container-wrapper">
+                        <canvas id="simulationChart"></canvas>
+                    </div>
+
+                    <div class="clinical-findings-card">
+                        <h4><span class="icon">📋</span> Dijital İkiz Simülasyon Bulguları</h4>
+                        <div id="sim-findings-content">
+                            <p class="text-muted">Simülasyon çalıştırıldıktan sonra hekim ve yapay zeka analiz raporu burada oluşturulacaktır.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        </div> <!-- End of twin-tab -->
+
+        <!-- TAB 2: PPG & Windkessel Calibration and Drift Analysis -->
+        <div id="calibration-tab" class="tab-pane hidden">
+            <div class="dashboard-grid">
+                
+                <!-- Controls Card -->
+                <section class="card glass-card form-section">
+                    <h2><span class="icon">⚙️</span> Kalibrasyon Kurulumu</h2>
+                    <form id="calibration-form">
+                        <div class="form-group">
+                            <label for="calib-subject">Kayıt Seçimi (Subject Index)</label>
+                            <select id="calib-subject" name="subject_idx">
+                                <option value="0" selected>Subject #0 (Normal Nabız ve Basınç)</option>
+                                <option value="50">Subject #50 (Düşük Genişlikli Sinyal)</option>
+                                <option value="100">Subject #100 (Yüksek Basınçlı Profil)</option>
+                                <option value="150">Subject #150 (Fizyolojik Dalgalanmalar)</option>
+                                <option value="200">Subject #200 (Ektobik/Düzensiz Atımlı Profil)</option>
+                                <option value="250">Subject #250 (Hızlı Kalp Hızı)</option>
+                                <option value="500">Subject #500 (Gürültülü Sinyal Testi)</option>
+                                <option value="1000">Subject #1000 (Yüksek R Damar Direnci)</option>
+                                <option value="1500">Subject #1500 (Yüksek Elastikiyet Kaybı)</option>
+                                <option value="2000">Subject #2000 (Normal Akış Profil)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="calib-duration">Kalibrasyon Penceresi (Saniye): <span id="calib-duration-val">10</span>s</label>
+                            <div class="input-with-info">
+                                <input type="range" id="calib-duration" name="calib_duration" min="5" max="25" step="1" value="10">
+                                <small class="field-desc">İlk N saniyedeki ABP dalgası kalibrasyon için referans olarak kullanılacaktır.</small>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-glow" id="run-calib-btn">
+                            <span class="pulse-ring"></span>
+                            PPG KALİBRASYONU VE SİMÜLASYONU BAŞLAT
+                        </button>
+                    </form>
+
+                    <div class="calib-results-card hidden" id="calib-results-panel" style="margin-top: 20px;">
+                        <h3><span class="icon">📊</span> Kalibrasyon Parametreleri</h3>
+                        <div class="calib-stats-list">
+                            <div class="calib-stat-item">
+                                <span class="stat-lbl">Zaman Hizalama (Lag):</span>
+                                <span class="stat-val" id="calib-lag">0.00s</span>
+                            </div>
+                            <div class="calib-stat-item">
+                                <span class="stat-lbl">Polarite / Korelasyon:</span>
+                                <span class="stat-val" id="calib-polarity">Pozitif</span>
+                            </div>
+                            <div class="calib-stat-item">
+                                <span class="stat-lbl">Kalibrasyon Katsayısı (α):</span>
+                                <span class="stat-val" id="calib-alpha">0.00</span>
+                            </div>
+                            <div class="calib-stat-item">
+                                <span class="stat-lbl">Kalibrasyon Sabiti (β):</span>
+                                <span class="stat-val" id="calib-beta">0.00</span>
+                            </div>
+                            <div class="calib-stat-item highlight-item-teal">
+                                <span class="stat-lbl">Kalibrasyon RMSE:</span>
+                                <span class="stat-val" id="calib-rmse-val">0.00 mmHg</span>
+                            </div>
+                            <div class="calib-stat-item highlight-item-purple">
+                                <span class="stat-lbl">Test (Post-Calib) RMSE:</span>
+                                <span class="stat-val" id="calib-test-rmse-val">0.00 mmHg</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Waveform Reconstruction Card -->
+                <section class="card glass-card results-section">
+                    <h2><span class="icon">📈</span> Sinyal Hizalama ve Basınç Rekonstrüksiyonu</h2>
+                    <div class="calib-initial-message" id="calib-initial-message">
+                        <div class="pulse-heart-animation">
+                            <svg viewBox="0 0 24 24" class="pulsing-heart" style="fill: #a155ff; width: 48px; height: 48px;">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                        </div>
+                        <p>PPG sinyalini ABP ile hizalayıp kalibre etmek ve zaman serisi üstündeki sapma (drift) etkilerini incelemek için soldaki parametreleri ayarlayıp simülasyonu başlatın.</p>
+                    </div>
+
+                    <div class="calib-content hidden" id="calib-charts-content">
+                        <div class="chart-container-wrapper" style="height: 320px; position: relative;">
+                            <canvas id="calibWaveformChart"></canvas>
+                        </div>
+                        
+                        <div class="chart-navigation" style="margin-top: 20px;">
+                            <button class="calib-tab-btn active" data-chart="bp_error">SBP / DBP Takip Hatası</button>
+                            <button class="calib-tab-btn" data-chart="r_param">Damar Direnci (R_real vs R_est)</button>
+                            <button class="calib-tab-btn" data-chart="c_param">Damar Esnekliği (C_real vs C_est)</button>
+                        </div>
+
+                        <div class="chart-container-wrapper" style="height: 300px; margin-top: 15px; position: relative;">
+                            <canvas id="calibAnalysisChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Drift Analysis & Biophysical Report -->
+            <section class="card glass-card simulation-section hidden" id="calib-report-section" style="margin-top: 25px; display: block;">
+                <div class="sim-header">
+                    <h2><span class="icon">📋</span> Kalibrasyon Kararlılığı ve Sapma (Drift) Analiz Raporu</h2>
+                    <p class="sim-intro-text">PPG-den kalibre edilen kan basıncı tahmininin zamana bağlı kararlılığı ve Windkessel parametrelerinin gerçek fizyolojiyle uyumu.</p>
+                </div>
+                <div class="clinical-findings-card" style="margin-top: 15px;">
+                    <div id="calib-findings-content">
+                        <!-- AI findings will go here -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <p>© 2026 Kardiyovasküler Dijital İkiz Modelleme. Bu uygulama tıbbi tanı amacı taşımaz, Windkessel hemodinamik modelleri ve makine öğrenmesi algoritmalarıyla fizyolojik simülasyon sunar.</p>
+        </div>
+    </footer>
+
+    <!-- Custom Script -->
+    <script src="/static/app.js"></script>
+</body>
+</html>

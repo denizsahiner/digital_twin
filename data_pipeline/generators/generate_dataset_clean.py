@@ -2,6 +2,9 @@ import numpy as np
 import pandas as pd
 from scipy.integrate import odeint
 from tqdm import tqdm
+from pathlib import Path as _Path
+
+_OUT = _Path(__file__).resolve().parents[2] / 'data'
 
 
 # --- YARDIMCI FONKSİYONLAR ---
@@ -88,5 +91,5 @@ columns = ['R', 'C', 'Zc', 'HR', 'SV',
            'Pulse_Pressure', 'Systole_Duration']
 
 df = pd.DataFrame(data, columns=columns)
-df.to_csv('../datasets/clean_windkessel_dataset.csv', index=False)
-print("✅ Tertemiz Dataset Hazır: ../datasets/clean_windkessel_dataset.csv")
+df.to_csv(_OUT / 'clean_windkessel_dataset.csv', index=False)
+print("✅ Tertemiz Dataset Hazır: data/clean_windkessel_dataset.csv")

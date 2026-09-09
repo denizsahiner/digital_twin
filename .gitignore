@@ -1,39 +1,26 @@
-# Byte-compiled / cache / IDE
+# --- Python ---
 __pycache__/
 *.py[cod]
-*$py.class
-.idea/
+*.egg-info/
 .venv/
+venv/
+.ipynb_checkpoints/
+
+# --- IDE / OS ---
+.idea/
+.vscode/
 .DS_Store
 
-# Exclude Markdown report files
-*.md
+# --- Data (not redistributed - see data/README.md) ---
+data/*
+!data/README.md
 
-# Exclude PNG image artifacts
-*.png
+# --- Trained model artifacts (regenerate via models/**/train_*.py) ---
+*.pkl
 
-# Exclude CSV datasets
-*.csv
-datasets/
+# --- Generated analysis outputs (regenerate via analysis/*.py) ---
+analysis/outputs/
 
-# Exclude Frontend application files
-templates/
-static/
-app.py
-
-# Exclude test and inspection scripts
-test_*.py
-windkessel_validation.py
-windkessel_fit.py
-inspect_cell.py
-inspect_mat.py
-
-# Exclude duplicate root clutter files
-extract_cardio.py
-extract_mimic.py
-train_cardio.py
-train_windkessel_xgboost.py
-cardio_model_nolabs.pkl
-cardio_scaler_nolabs.pkl
-realistic_model.pkl
-realistic_scaler.pkl
+# --- Stray run artifacts written to CWD by simulation/experiment scripts ---
+/*.png
+/*.csv
