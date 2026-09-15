@@ -2,10 +2,15 @@ import numpy as np
 import pandas as pd
 import xgboost as xgb
 import joblib
-import os
+from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, roc_auc_score
+
+# --- PATHS ---
+HERE = Path(__file__).resolve().parent
+MODEL_PATH = HERE / 'cardio_model_nolabs.pkl'
+SCALER_PATH = HERE / 'cardio_scaler_nolabs.pkl'
 
 print(" Monotonluk Kısıtlı Cardio Risk Modeli Eğitiliyor...")
 np.random.seed(42)
@@ -130,11 +135,7 @@ print(f"   Sadece Alkol Alan                    : %{r_alco*100:.2f} Risk (Fark: 
 print(f"   Sigara + Alkol                       : %{r_both*100:.2f} Risk (Fark: +{(r_both-p_clean)*100:.2f}%)")
 
 # Kaydet
-os.makedirs('ml_model_cardio', exist_ok=True)
-joblib.dump(model, 'ml_model_cardio/cardio_model_nolabs.pkl')
-joblib.dump(scaler, 'ml_model_cardio/cardio_scaler_nolabs.pkl')
+joblib.dump(model, MODEL_PATH)
+joblib.dump(scaler, SCALER_PATH)
 
-joblib.dump(model, 'cardio_model_nolabs.pkl')
-joblib.dump(scaler, 'cardio_scaler_nolabs.pkl')
-
-print("\n✅ Monoton Cardio Modeli ve Scaler başarıyla yüklendi ve kaydedildi!")
+print(f"\n✅ Monoton Cardio Modeli kaydedildi: {MODEL_PATH.name}, {SCALER_PATH.name}")

@@ -6,7 +6,12 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import r2_score, mean_absolute_error
 import xgboost as xgb
 import joblib
-import os
+from pathlib import Path
+
+# --- PATHS ---
+HERE = Path(__file__).resolve().parent
+MODEL_PATH = HERE / 'realistic_model.pkl'
+SCALER_PATH = HERE / 'realistic_scaler.pkl'
 
 print(" Düzeltilmiş 3-Element Windkessel Modeli Eğitiliyor...")
 np.random.seed(42)
@@ -121,12 +126,7 @@ for i, col in enumerate(targets):
     print(f"   {col:<7} | R2 = {r2:.4f} | MAE = {mae:.4f}")
 
 # Modelleri kaydet
-os.makedirs('ml_model_windkessel', exist_ok=True)
-joblib.dump(model, 'ml_model_windkessel/realistic_model.pkl')
-joblib.dump(scaler, 'ml_model_windkessel/realistic_scaler.pkl')
+joblib.dump(model, MODEL_PATH)
+joblib.dump(scaler, SCALER_PATH)
 
-# Ana dizindeki kopyayı da güncelle
-joblib.dump(model, 'realistic_model.pkl')
-joblib.dump(scaler, 'realistic_scaler.pkl')
-
-print("✅ Yeni model ve scaler başarıyla kaydedildi!")
+print(f"✅ Yeni model ve scaler kaydedildi: {MODEL_PATH.name}, {SCALER_PATH.name}")

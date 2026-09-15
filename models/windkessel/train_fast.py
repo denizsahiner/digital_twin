@@ -6,8 +6,13 @@ from sklearn.metrics import r2_score, mean_absolute_error
 from sklearn.multioutput import MultiOutputRegressor
 import xgboost as xgb
 import joblib
-import os
 import time
+from pathlib import Path
+
+# --- PATHS ---
+HERE = Path(__file__).resolve().parent
+MODEL_PATH = HERE / 'realistic_model.pkl'
+SCALER_PATH = HERE / 'realistic_scaler.pkl'
 
 t0 = time.time()
 print("Generating synthetic 3-element Windkessel dataset...")
@@ -108,11 +113,7 @@ for i, col in enumerate(targets):
     print(f"{col:<8} | R2: {r2:.4f} | MAE: {mae:.4f}")
 print("-" * 40)
 
-os.makedirs('ml_model_windkessel', exist_ok=True)
-joblib.dump(model, 'ml_model_windkessel/realistic_model.pkl')
-joblib.dump(scaler, 'ml_model_windkessel/realistic_scaler.pkl')
-
-joblib.dump(model, 'realistic_model.pkl')
-joblib.dump(scaler, 'realistic_scaler.pkl')
+joblib.dump(model, MODEL_PATH)
+joblib.dump(scaler, SCALER_PATH)
 
 print(f"Model saved successfully in {time.time()-t0:.2f} seconds.")

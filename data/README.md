@@ -6,6 +6,7 @@ Put the files below here to reproduce the pipeline.
 | File | Source | Used by |
 |---|---|---|
 | `cardio_train.csv` | Kaggle — [Cardiovascular Disease dataset](https://www.kaggle.com/datasets/sulianova/cardiovascular-disease-dataset) (`;`-separated) | `data_pipeline/extract_cardio.py` |
+| `cardio_train.sample.csv` | **committed** — first 100 rows of the above, for smoke-testing the pipeline without the full download | `data_pipeline/extract_cardio.py` |
 | `mimic-iv-clinical-database-demo-2.2/` | PhysioNet — [MIMIC-IV Clinical Database Demo](https://physionet.org/content/mimic-iv-demo/) | `data_pipeline/extract_mimic.py` |
 | `mimic/Part_3.mat` | Kaggle — [Cuff-Less Blood Pressure Estimation](https://www.kaggle.com/datasets/mkachuee/BloodPressureDataset) (`Part_3.mat`) | `app.py` calibrate-PPG endpoint, `simulation/windkessel_*.py`, `experiments/*` |
 

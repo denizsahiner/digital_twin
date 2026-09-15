@@ -60,23 +60,44 @@ pip install -r requirements.txt
 Datasets and trained `.pkl` files are **not** in the repo (third-party data / regenerable
 artifacts). See [`data/README.md`](data/README.md).
 
-## Reproduce the pipeline
+## Quickstart — run the app with no external data
+
+Both models can be trained from **self-contained synthetic generators** (no Kaggle /
+PhysioNet download). This produces the exact `.pkl` files `app.py` loads:
+
+```bash
+pip install -r requirements.txt
+python models/cardio/train_cardio_constrained.py    # -> models/cardio/cardio_model_nolabs.pkl
+python models/windkessel/train_fast.py              # -> models/windkessel/realistic_model.pkl  (~2 s)
+python app.py                                       # http://localhost:5001
+```
+
+The dataset-backed scripts below give better models, but the app is fully functional
+on the synthetic ones.
+
+## Reproduce the full pipeline
 
 ```bash
 # 1. synthetic Windkessel training data (3-element ODE, seed 42, 60k samples, ~4 min)
+#    -> data/realistic_windkessel_dataset.csv   (deterministic; regenerates byte-for-byte)
 python data_pipeline/generators/generate_dataset_3.py
 
 # 2. train the Windkessel R/C/Zc regressor
 python models/windkessel/train_windkessel_xgboost.py
 
-# 3. cardio risk model (needs data/cardio_train.csv from Kaggle)
-python data_pipeline/extract_cardio.py
+# 3. cardio risk model (needs data/cardio_train.csv from Kaggle - see data/README.md;
+#    data/cardio_train.sample.csv (100 rows) is committed so the step can be smoke-tested)
+python data_pipeline/extract_cardio.py             # -> data/cardio_train_feature.csv
 python models/cardio/train_cardio.py
 
 # 4. run the deep-dive analysis (writes analysis/outputs/)
 python analysis/01_cross_validation.py
 python analysis/04_ablation_study.py
 ```
+
+Every transformation from raw input to training table lives in `data_pipeline/`
+(`extract_cardio.py`, `extract_mimic.py`, `generators/`) — no manual feature-engineering
+step outside the repo.
 
 ## Run the web app
 

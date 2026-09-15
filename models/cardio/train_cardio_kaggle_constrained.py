@@ -3,17 +3,27 @@ import numpy as np
 import xgboost as xgb
 import joblib
 import os
+from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, roc_auc_score, precision_recall_curve, auc
 
+# --- PATHS ---
+HERE = Path(__file__).resolve().parent
+REPO_ROOT = HERE.parents[1]
+DATA_PATH = REPO_ROOT / 'data' / 'cardio_train.csv'   # raw Kaggle "Cardiovascular Disease" dataset
+MODEL_PATH = HERE / 'cardio_model_nolabs.pkl'
+SCALER_PATH = HERE / 'cardio_scaler_nolabs.pkl'
+
 print("Loading Kaggle cardiovascular disease dataset...")
 
-data_path = 'datasets/cardio_train.csv'
-if not os.path.exists(data_path):
-    raise FileNotFoundError(f"Dataset file '{data_path}' not found.")
+if not os.path.exists(DATA_PATH):
+    raise FileNotFoundError(
+        f"Dataset file '{DATA_PATH}' not found. "
+        f"Download the Kaggle 'Cardiovascular Disease' dataset to data/cardio_train.csv"
+    )
 
-df = pd.read_csv(data_path, sep=';')
+df = pd.read_csv(DATA_PATH, sep=';')
 print(f"Raw dataset shape: {df.shape}")
 
 df = df[(df['ap_hi'] >= 70) & (df['ap_hi'] <= 220)]
@@ -96,11 +106,7 @@ print(f"Smoking risk              : {r_smoke*100:.2f}% (Diff: +{(r_smoke-p_clean
 print(f"Alcohol risk              : {r_alco*100:.2f}% (Diff: +{(r_alco-p_clean)*100:.2f}%)")
 print(f"Smoking + Alcohol risk    : {r_both*100:.2f}% (Diff: +{(r_both-p_clean)*100:.2f}%)")
 
-os.makedirs('ml_model_cardio', exist_ok=True)
-joblib.dump(model, 'ml_model_cardio/cardio_model_nolabs.pkl')
-joblib.dump(scaler, 'ml_model_cardio/cardio_scaler_nolabs.pkl')
+joblib.dump(model, MODEL_PATH)
+joblib.dump(scaler, SCALER_PATH)
 
-joblib.dump(model, 'cardio_model_nolabs.pkl')
-joblib.dump(scaler, 'cardio_scaler_nolabs.pkl')
-
-print("\nCardio risk model and scaler saved successfully.")
+print(f"\nCardio risk model and scaler saved: {MODEL_PATH.name}, {SCALER_PATH.name}")
